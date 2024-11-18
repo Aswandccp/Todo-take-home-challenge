@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import ProjectDetail from "./components/ProjectDetail";
+import ProjectList from "./components/ProjectList";
+import Login from "./components/Login";
+import "./style.css";
 
-function App() {
+const App = () => {
+  const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleSelectProject = (project) => setSelectedProject(project);
+  const handleBack = () => setSelectedProject(null);
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      {!isAuthenticated ? (
+        <Login onLogin={setIsAuthenticated} />
+      ) : (
+        <div>
+          {selectedProject ? (
+            <ProjectDetail
+              project={selectedProject}
+              projects={projects}
+              setProjects={setProjects}
+              onBack={handleBack}
+            />
+          ) : (
+            <ProjectList
+              projects={projects}
+              setProjects={setProjects}
+              onSelect={handleSelectProject}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
-}
+};
 
 export default App;
+
